@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- CSS only -->
+    <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+    integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We"
+        crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<script>
+$(document).ready(function(){
+  $("#myInput").on("keyup", function() {
+    var value = $(this).val().toLowerCase();
+    $("#song_table tr").filter(function() {
+      $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+    });
+  });
+});
+</script>
+
+
+
+</head>
+<body>
+<div class="container">
+    <h2>Search Clone Hero Exported Songs.</h2>
+
+    <div id="filefind"></div>
+    <hr>
+
+    <input id="myInput" type="text" placeholder="Search..">
+    <br><br>
+    <p id="demo"></p>
+    <table class="table table-striped table-responsive">
+    <thead class="thead-dark">
+    <tr>
+        <th>Artist</th>
+        <th>Name</th>
+        <th>Lyrics</th>
+    </tr>
+    </thead>
+    <tbody id="song_table">
+    </tbody>  
+    </table>
+</div>
+
+<script>
+
+function load_table(data) {
+  const myObj = JSON.parse(data);
+  let text = "";
+  for (let x in myObj) {
+    text += "<tr>";
+    text += "<td>" + myObj[x].Artist + "</td>";
+    text += "<td>" + myObj[x].Name + "</td>";
+    text += "<td>" + myObj[x].lyrics + "</td>";
+    text += "</tr>";
+  }
+  document.getElementById("song_table").innerHTML = text;
+}
+
+function manual_load(){
+    let text = '<h3>Choose songs.json file...</h3><input type="file" id="myFile">';
+    document.getElementById("filefind").innerHTML = text;
+    
+    var input = document.getElementById("myFile");
+    input.addEventListener("change", function () {
+    if (this.files && this.files[0]) {
+        var myFile = this.files[0];
+        var reader = new FileReader();
+        
+        reader.addEventListener('load', function (e) {
+            load_table(e.target.result);
+        });
+        
+        reader.readAsBinaryString(myFile);
+    }   
+    });
+}
+
+fetch('/songs.json')
+    .then(response => response.text())
+    .then(data => load_table(data))
+    .catch((error) => manual_load());
+
+</script>
+
+<script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"
+integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj"
+    crossorigin="anonymous"></script>
+
+</body>
+</html>
