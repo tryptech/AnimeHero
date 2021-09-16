@@ -34,11 +34,13 @@ $(document).ready(function(){
     <hr>
 
     <input id="myInput" type="text" placeholder="Search..">
+	<button id="filterLikes" onclick="filter_likes()">Toggle Starred Items</button>
     <br><br>
     <p id="demo"></p>
     <table class="table table-striped table-responsive">
     <thead class="thead-dark">
     <tr>
+        <th></th>
         <th>Artist</th>
         <th>Name</th>
         <th>Lyrics</th>
@@ -51,23 +53,92 @@ $(document).ready(function(){
 
 <script>
 
+function checksum(s)
+{
+  var chk = 0x12345678;
+  var len = s.length;
+  for (var i = 0; i < len; i++) {
+      chk += (s.charCodeAt(i) * (i + 1));
+  }
+
+  return (chk & 0xffffffff).toString(16);
+}
+
+function filter_likes() {
+	console.log('\u2605');
+	if ( localStorage.getItem('filter_likes') ) {
+		$("#song_table tr").filter(function() {
+			$(this).toggle($(this).text().indexOf('') > -1)
+		});
+		localStorage.removeItem('filter_likes');
+	} else {
+		$("#song_table tr").filter(function() {
+			$(this).toggle($(this).text().indexOf('\u2605') > -1)
+		});
+		localStorage.setItem('filter_likes', 'poof');
+	}
+}
+
 function load_table(data) {
   const myObj = JSON.parse(data);
   let text = "";
+  let index = 0;
+
   for (let x in myObj) {
+	var song_id = checksum(JSON.stringify(myObj[x]));
+    var like_state = check_like(song_id);
+
+    if (like_state == 1) {
+        var like_htmlout = '&#9733;'
+    } else {
+        var like_htmlout = '&#9734;'
+    }
+
     text += "<tr>";
+    text += '<td><button id="' + song_id + '" onclick="like(this.id)" style="border:none;background:none;">' + like_htmlout + '</button></td>';
     text += "<td>" + myObj[x].Artist + "</td>";
     text += "<td>" + myObj[x].Name + "</td>";
     text += "<td>" + myObj[x].lyrics + "</td>";
     text += "</tr>";
+    index++;
   }
   document.getElementById("song_table").innerHTML = text;
+  localStorage.removeItem('filter_likes');
+}
+
+function check_like(song_id) {
+    if (localStorage.getItem("like_status_" + song_id)) {
+		console.log("Found like status for " + song_id);
+        return localStorage.getItem("like_status_" + song_id);
+    } else {
+        return 0;
+    }
+}
+
+function like(song_id) {
+    console.log("Toggling like for " + song_id);
+    var like_state = check_like(song_id);
+
+    if (like_state == 1) {
+        var htmlout = '&#9734;'
+        like_state = 0;
+    } else {
+        var htmlout = '&#9733;'
+        like_state = 1;
+    }
+    localStorage.setItem("like_status_" + song_id, like_state);
+
+    document.getElementById(song_id).innerHTML = htmlout;
 }
 
 function manual_load(){
     let text = '<h3>Choose songs.json file...</h3><input type="file" id="myFile">';
     document.getElementById("filefind").innerHTML = text;
     
+    if (localStorage.songdata) {
+        load_table(localStorage.songdata);
+    } 
+
     var input = document.getElementById("myFile");
     input.addEventListener("change", function () {
     if (this.files && this.files[0]) {
@@ -76,6 +147,7 @@ function manual_load(){
         
         reader.addEventListener('load', function (e) {
             load_table(e.target.result);
+            localStorage.songdata = e.target.result;
         });
         
         reader.readAsBinaryString(myFile);
