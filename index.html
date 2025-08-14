@@ -34,8 +34,11 @@ $(document).ready(function(){
 	<div id="filefind"></div>
 	<hr>
 
-	<input id="myInput" type="text" placeholder="Search..">
-	<button id="filterLikes" onclick="filter_likes()">Toggle Starred Items</button>
+	<div class="form-floating mb-3">
+		<input id="myInput" type="text" placeholder="Search.." class="form-control form-control-lg">
+		<label for="myInput">Search</label>
+	</div>
+	<button id="filterLikes" class="btn btn-outline-primary" data-bs-toggle="button" onclick="filter_likes()">Toggle Starred Items</button>
 	<br><br>
 	<p id="demo"></p>
 	<table class="table table-striped table-responsive" id="songTable">
