@@ -155,7 +155,7 @@ function manual_load(){
     });
 }
 
-fetch('/songs.json')
+fetch('./songs.json')
     .then(response => response.text())
     .then(data => load_table(data))
     .catch((error) => manual_load());
