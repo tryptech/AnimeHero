@@ -29,7 +29,7 @@ $(document).ready(function(){
 <body>
 <div class="container">
 	<h2>Anime Hero Tracklist</h2>
-	<h4>I don't guarantee any difficulties other than Expert</h4>
+	<h5>I don't guarantee any difficulties other than Expert</h5>
 
 	<div id="filefind"></div>
 	<hr>
@@ -49,7 +49,7 @@ $(document).ready(function(){
 				<th class="year">Year</th>
 				<th class="genre">Genre</th>
 				<th class="charter">Charter</th>
-				<th class="lyrics">Has Lyrics</th>
+				<th class="lyrics d-none d-xxl-block">Has Lyrics</th>
 			</tr>
 		</thead>
 		<tbody id="song_table">
@@ -86,34 +86,34 @@ function filter_likes() {
 }
 
 function load_table(data) {
-	const myObj = JSON.parse(data);
+	const myObj = JSON.parse(data).sort((a, b) => (a.Name > b.Name ? 1 : -1));
 	let text = "";
 	let index = 0;
 
 	for (let x in myObj) {
-	var song_id = checksum(JSON.stringify(myObj[x]));
-	var like_state = check_like(song_id);
+		var song_id = checksum(JSON.stringify(myObj[x]));
+		var like_state = check_like(song_id);
 
-	if (like_state == 1) {
-		var like_htmlout = '&#9733;'
-	} else {
-		var like_htmlout = '&#9734;'
-	}
+		if (like_state == 1) {
+			var like_htmlout = '&#9733;'
+		} else {
+			var like_htmlout = '&#9734;'
+		}
 
-	var time = msToTime(myObj[x].songlength);
+		var time = msToTime(myObj[x].songlength);
 
-	text += "<tr>";
-	text += '<td class="fav"><button id="' + song_id + '" onclick="like(this.id)" style="border:none;background:none;">' + like_htmlout + '</button></td>';
-	text += "<td class='name'>" + myObj[x].Name + "</td>";
-	text += "<td class='length'>" + time + "</td>";
-	text += "<td class='artist'>" + myObj[x].Artist + "</td>";
-	text += "<td class='album'>" + myObj[x].Album + "</td>";
-	text += "<td class='year'>" + myObj[x].Year + "</td>";
-	text += "<td class='genre'>" + myObj[x].Genre + "</td>";
-	text += "<td class='charter'>" + myObj[x].Charter + "</td>";
-	text += "<td class='lyrics'>" + myObj[x].lyrics + "</td>";
-	text += "</tr>";
-	index++;
+		text += `<tr id="row-${index}">`;
+		text += '<td class="fav"><button id="' + song_id + '" onclick="like(this.id)" style="border:none;background:none;">' + like_htmlout + '</button></td>';
+		text += "<td class='name'>" + myObj[x].Name + "</td>";
+		text += "<td class='length'>" + time + "</td>";
+		text += "<td class='artist'>" + myObj[x].Artist + "</td>";
+		text += "<td class='album d-none d-lg-block'>" + myObj[x].Album + "</td>";
+		text += "<td class='year d-none d-lg-block'>" + myObj[x].Year + "</td>";
+		text += "<td class='genre d-none d-lg-block'>" + myObj[x].Genre + "</td>";
+		text += "<td class='charter d-none d-xl-block'>" + myObj[x].Charter + "</td>";
+		text += "<td class='lyrics d-none d-xxl-block'>" + myObj[x].lyrics + "</td>";
+		text += "</tr>";
+		index++;
 	}
 	document.getElementById("song_table").innerHTML = text;
 	localStorage.removeItem('filter_likes');
