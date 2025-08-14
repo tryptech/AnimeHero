@@ -196,6 +196,7 @@ function setUpSort() {
 	Array.from(tbody.querySelectorAll('tr'))
 		.sort(comparer(Array.from(th.parentNode.children).indexOf(th), this.asc = !this.asc))
 		.forEach(tr => tbody.appendChild(tr) );
+	})));
 }
 
 fetch('./songs.json')
