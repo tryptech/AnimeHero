@@ -41,9 +41,13 @@ $(document).ready(function(){
     <thead class="thead-dark">
     <tr>
         <th></th>
-        <th>Artist</th>
         <th>Name</th>
-        <th>Lyrics</th>
+        <th>Artist</th>
+		<th>Album</th>
+		<th>Year</th>
+		<th>Genre</th>
+		<th>Charter</th>
+        <th>Has Lyrics</th>
     </tr>
     </thead>
     <tbody id="song_table">
@@ -94,10 +98,17 @@ function load_table(data) {
         var like_htmlout = '&#9734;'
     }
 
+	var time = msToTime(myObj[x].songlength
+
     text += "<tr>";
     text += '<td><button id="' + song_id + '" onclick="like(this.id)" style="border:none;background:none;">' + like_htmlout + '</button></td>';
-    text += "<td>" + myObj[x].Artist + "</td>";
     text += "<td>" + myObj[x].Name + "</td>";
+    text += "<td>" + time + "</td>";
+    text += "<td>" + myObj[x].Artist + "</td>";
+    text += "<td>" + myObj[x].Album + "</td>";
+    text += "<td>" + myObj[x].Year + "</td>";
+    text += "<td>" + myObj[x].Genre + "</td>";
+    text += "<td>" + myObj[x].Charter + "</td>";
     text += "<td>" + myObj[x].lyrics + "</td>";
     text += "</tr>";
     index++;
@@ -153,6 +164,19 @@ function manual_load(){
         reader.readAsBinaryString(myFile);
     }   
     });
+}
+
+function msToTime(duration) {
+	var milliseconds = Math.floor((duration % 1000) / 100),
+		seconds = Math.floor((duration / 1000) % 60),
+    	minutes = Math.floor((duration / (1000 * 60)) % 60),
+    	hours = Math.floor((duration / (1000 * 60 * 60)) % 24);
+
+	//hours = (hours < 10) ? "0" + hours : hours;
+	//minutes = (minutes < 10) ? "0" + minutes : minutes;
+	seconds = (seconds < 10) ? "0" + seconds : seconds;
+
+	return minutes + ":" + seconds;
 }
 
 fetch('./songs.json')
