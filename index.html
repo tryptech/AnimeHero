@@ -45,11 +45,11 @@ $(document).ready(function(){
 				<th class="name">Name</th>
 				<th class="length">Length</th>
 				<th class="artist">Artist</th>
-				<th class="album">Album</th>
-				<th class="year">Year</th>
-				<th class="genre">Genre</th>
-				<th class="charter">Charter</th>
-				<th class="lyrics d-none d-xxl-block">Has Lyrics</th>
+				<th class="album d-none d-lg-table-cell">Album</th>
+				<th class="year d-none d-lg-table-cell">Year</th>
+				<th class="genre d-none d-lg-table-cell">Genre</th>
+				<th class="charter d-none d-xl-table-cell">Charter</th>
+				<th class="lyrics d-none d-xxl-table-cell">Has Lyrics</th>
 			</tr>
 		</thead>
 		<tbody id="song_table">
@@ -107,11 +107,11 @@ function load_table(data) {
 		text += "<td class='name'>" + myObj[x].Name + "</td>";
 		text += "<td class='length'>" + time + "</td>";
 		text += "<td class='artist'>" + myObj[x].Artist + "</td>";
-		text += "<td class='album d-none d-lg-block'>" + myObj[x].Album + "</td>";
-		text += "<td class='year d-none d-lg-block'>" + myObj[x].Year + "</td>";
-		text += "<td class='genre d-none d-lg-block'>" + myObj[x].Genre + "</td>";
-		text += "<td class='charter d-none d-xl-block'>" + myObj[x].Charter + "</td>";
-		text += "<td class='lyrics d-none d-xxl-block'>" + myObj[x].lyrics + "</td>";
+		text += "<td class='album d-none d-lg-table-cell'>" + myObj[x].Album + "</td>";
+		text += "<td class='year d-none d-lg-table-cell'>" + myObj[x].Year + "</td>";
+		text += "<td class='genre d-none d-lg-table-cell'>" + myObj[x].Genre + "</td>";
+		text += "<td class='charter d-none d-xl-table-cell'>" + myObj[x].Charter + "</td>";
+		text += "<td class='lyrics d-none d-xxl-table-cell'>" + myObj[x].lyrics + "</td>";
 		text += "</tr>";
 		index++;
 	}
