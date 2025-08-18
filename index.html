@@ -1,35 +1,73 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<!-- CSS only -->
 	<link
-	href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css"
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css"
 	rel="stylesheet"
-	integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We"
 		crossorigin="anonymous">
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<script src="https://unpkg.com/encoding-japanese@2.2.0/encoding.min.js"></script>
 
 <script>
-$(document).ready(function(){
-	$("#myInput").on("keyup", function() {
-	var value = $(this).val().toLowerCase();
-	$("#song_table tr").filter(function() {
-		$(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+	$(document).ready(function(){
+		$("#myInput").on("keyup", function() {
+		var value = $(this).val().toLowerCase();
+		$("#song_table tr").filter(function() {
+			$(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+		});
+		});
 	});
-	});
+
+	document.addEventListener('DOMContentLoaded', (event) => {
+    const htmlElement = document.documentElement;
+    const switchElement = document.getElementById('darkModeSwitch');
+
+    // Set the default theme to dark if no setting is found in local storage
+    const currentTheme = localStorage.getItem('bsTheme') || 'dark';
+    htmlElement.setAttribute('data-bs-theme', currentTheme);
+    switchElement.checked = currentTheme === 'dark';
+
+    switchElement.addEventListener('change', function () {
+        if (this.checked) {
+            htmlElement.setAttribute('data-bs-theme', 'dark');
+            localStorage.setItem('bsTheme', 'dark');
+        } else {
+            htmlElement.setAttribute('data-bs-theme', 'light');
+            localStorage.setItem('bsTheme', 'light');
+        }
+    });
 });
 </script>
 
+<style>
 
+</style>
 
 </head>
 <body>
 <div class="container">
-	<h2 class="mt-5 mx-auto text-center">Anime Hero Tracklist</h2>
-	<small class="mx-auto text-center d-block">I don't guarantee any difficulties other than Expert</small>
+	<nav class="navbar clearfix flex-row-reverse">
+		<div class="form-check form-switch mt-2 float-end">
+			<input class="form-check-input" type="checkbox" id="darkModeSwitch" checked>
+			<label class="form-check-label" for="darkModeSwitch">Dark Mode</label>
+		</div>
+	</nav>
+
+	<h1 class="mx-auto text-center">Anime Hero Tracklist</h1>
+	<h6 class="mx-auto text-center d-block mb-4">
+		by tryptech <div class="vr"></div> 
+		<a href="https://twitter.com/yo_tryptech" target="_blank" rel="noopener">twitter</a> <div class="vr"></div> 
+		<a href="https://bsky.app/profile/tryp.tech" target="_blank" rel="noopener">bluesky</a>
+	</h6>
+	<h5 class="mx-auto text-center d-block mb-4">One song, one shot. If you pass, you get a sticker.<br>
+		I don't guarantee any difficulties other than Expert.</h5>
+	<small class="d-block text-center text-muted mb-3 mx-auto">
+		While you're here, check out the game I'm working on: <a href="https://waa.ai/chrono-gear" target="_blank" rel="noopener">Chrono Gear: Warden of Time</a>
+	</small>
 
 	<div id="filefind"></div>
 	<hr>
@@ -42,23 +80,25 @@ $(document).ready(function(){
         <button id="filterLikes" class="btn btn-outline-primary" data-bs-toggle="button" onclick="filter_likes()">Toggle Starred Items</button>
     </div>
 	<p id="demo"></p>
-	<table class="table table-striped table-responsive" id="songTable">
-		<thead class="thead-dark">
-			<tr>
-				<th class="fav"></th>
-				<th class="name">Name</th>
-				<th class="length">Length</th>
-				<th class="artist">Artist</th>
-				<th class="album d-none d-lg-table-cell">Album</th>
-				<th class="year d-none d-lg-table-cell">Year</th>
-				<th class="genre d-none d-lg-table-cell">Genre</th>
-				<th class="charter d-none d-xl-table-cell">Charter</th>
-				<th class="lyrics d-none d-xxl-table-cell">Has Lyrics</th>
-			</tr>
-		</thead>
-		<tbody id="song_table">
-		</tbody>	
-	</table>
+	<div class="table-responsive">
+		<table class="table table-striped" id="songTable">
+			<thead class="thead-dark">
+				<tr>
+					<th class="fav"></th>
+					<th class="name">Name</th>
+					<th class="length d-none d-sm-table-cell">Length</th>
+					<th class="artist d-none d-sm-table-cell">Artist</th>
+					<th class="album d-none d-xl-table-cell">Album</th>
+					<th class="year d-none d-lg-table-cell">Year</th>
+					<th class="genre d-none d-xl-table-cell">Genre</th>
+					<th class="charter d-none d-xxl-table-cell">Charter</th>
+					<th class="lyrics d-none d-xl-table-cell">Has Lyrics</th>
+				</tr>
+			</thead>
+			<tbody id="song_table">
+			</tbody>	
+		</table>
+	</div>
 </div>
 
 <script>
@@ -107,15 +147,23 @@ function load_table(data) {
 		var time = msToTime(myObj[x].songlength);
 
 		text += `<tr id="row-${index}">`;
-		text += '<td class="fav"><button id="' + song_id + '" onclick="like(this.id)" style="border:none;background:none;">' + like_htmlout + '</button></td>';
-		text += "<td class='name'>" + myObj[x].Name + "</td>";
-		text += "<td class='length'>" + time + "</td>";
-		text += "<td class='artist'>" + myObj[x].Artist + "</td>";
-		text += "<td class='album d-none d-lg-table-cell'>" + myObj[x].Album + "</td>";
-		text += "<td class='year d-none d-lg-table-cell'>" + myObj[x].Year + "</td>";
-		text += "<td class='genre d-none d-lg-table-cell'>" + myObj[x].Genre + "</td>";
-		text += "<td class='charter d-none d-xl-table-cell'>" + myObj[x].Charter + "</td>";
-		text += "<td class='lyrics d-none d-xxl-table-cell'>" + myObj[x].lyrics + "</td>";
+		text += '<td class="fav align-middle"><button id="' + song_id + '" onclick="like(this.id)" style="border:none;background:none;">' + like_htmlout + '</button></td>';
+		text += `<td class='name align-middle'>
+	<div class="d-flex flex-column">
+		<div>${fix(myObj[x].Name)}</div>
+		<div class="d-inline-flex">
+			<div class="d-block d-sm-none text-muted flex-grow-1">${myObj[x].Artist}</div>
+			<div class="d-block d-sm-none text-muted ms-3 me-1">${time}</div>
+		</div>
+	</div>
+</td>`;
+		text += "<td class='length align-middle d-none d-sm-table-cell'>" + time + "</td>";
+		text += "<td class='artist align-middle d-none d-sm-table-cell'>" + myObj[x].Artist + "</td>";
+		text += "<td class='album align-middle d-none d-xl-table-cell'>" + myObj[x].Album + "</td>";
+		text += "<td class='year align-middle d-none d-lg-table-cell'>" + myObj[x].Year + "</td>";
+		text += "<td class='genre align-middle d-none d-xl-table-cell'>" + myObj[x].Genre + "</td>";
+		text += "<td class='charter align-middle d-none d-xxl-table-cell'>" + myObj[x].Charter + "</td>";
+		text += "<td class='lyrics align-middle d-none d-xl-table-cell'>" + myObj[x].lyrics + "</td>";
 		text += "</tr>";
 		index++;
 	}
@@ -186,6 +234,15 @@ function msToTime(duration) {
 	return minutes + ":" + seconds;
 }
 
+function fix(s) {
+	var unicodeArray = Encoding.stringToCode(s);
+	return Encoding.convert(unicodeArray, {
+		from: 'AUTO',
+		to: 'UNICODE',
+		type: 'string'
+	});
+}
+
 const getCellValue = (tr, idx) => tr.children[idx].innerText || tr.children[idx].textContent;
 
 const comparer = (idx, asc) => (a, b) => ((v1, v2) => 
@@ -211,8 +268,7 @@ fetch('./songs.json')
 </script>
 
 <script
-	src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"
-integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj"
+	src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"
 	crossorigin="anonymous"></script>
 
 </body>
