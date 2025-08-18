@@ -158,11 +158,11 @@ function load_table(data) {
 	</div>
 </td>`;
 		text += "<td class='length align-middle d-none d-sm-table-cell'>" + time + "</td>";
-		text += "<td class='artist align-middle d-none d-sm-table-cell'>" + myObj[x].Artist + "</td>";
-		text += "<td class='album align-middle d-none d-xl-table-cell'>" + myObj[x].Album + "</td>";
+		text += "<td class='artist align-middle d-none d-sm-table-cell'>" + fix(myObj[x].Artist) + "</td>";
+		text += "<td class='album align-middle d-none d-xl-table-cell'>" + fix(myObj[x].Album) + "</td>";
 		text += "<td class='year align-middle d-none d-lg-table-cell'>" + myObj[x].Year + "</td>";
-		text += "<td class='genre align-middle d-none d-xl-table-cell'>" + myObj[x].Genre + "</td>";
-		text += "<td class='charter align-middle d-none d-xxl-table-cell'>" + myObj[x].Charter + "</td>";
+		text += "<td class='genre align-middle d-none d-xl-table-cell'>" + fix(myObj[x].Genre) + "</td>";
+		text += "<td class='charter align-middle d-none d-xxl-table-cell'>" + fix(myObj[x].Charter) + "</td>";
 		text += "<td class='lyrics align-middle d-none d-xl-table-cell'>" + myObj[x].lyrics + "</td>";
 		text += "</tr>";
 		index++;
